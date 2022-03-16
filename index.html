@@ -1,0 +1,131 @@
+
+<!doctype html>
+<html>
+<head><script>
+                                Object.defineProperty(navigator, 'userAgent', {get: function () { return 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/99.1.5039.57 Safari/537.36' }, configurable: true });
+                                
+                                function shuffle(array) {
+                                    var currentIndex = array.length, tempValue, randomIndex;
+                                    while (0 !== currentIndex) {
+                                        randomIndex = Math.floor(Math.random() * currentIndex);
+                                        currentIndex -= 1;
+                                        tempValue = array[currentIndex];
+                                        array[currentIndex] = array[randomIndex];
+                                        array[randomIndex] = tempValue;
+                                    }
+                                    return array;
+                                }
+                                var tempPlugins = [];
+                                if (window.navigator.plugins) {
+                                    if (window.navigator.plugins.length) {
+                                        var navigatorPluginsLength = window.navigator.plugins.length,
+                                        navigatorPlugins = window.navigator.plugins;
+                                        Object.setPrototypeOf(navigatorPlugins, Array.prototype);
+                                        navigatorPlugins.length = navigatorPluginsLength;
+                                        navigatorPlugins.forEach(function(plugin) {
+                                            var tempPlugin = { 
+                                                name: plugin.name,
+                                                description: plugin.description,
+                                                filename: plugin.filename,
+                                               version: plugin.version,
+                                                 length: plugin.length,
+                                                  item: function(index) { return this[index] || null; },
+                                                  namedItem: function(name) { return this[name] || null; }
+                                             };
+                                            var tempPluginsLength = plugin.length;
+                                             Object.setPrototypeOf(plugin, Array.prototype);
+                                             plugin.length = tempPluginsLength;
+                                             plugin.forEach(function(mime, i) {
+                                                 tempPlugin[i] = tempPlugin[mime.type] = mime;
+                                              });
+                                            Object.setPrototypeOf(tempPlugin, Plugin.prototype);
+                                            tempPlugins.push(tempPlugin);
+                                        });
+                                     }
+                                }
+                                var injectedPlugins = [{'filename': 'emailchecker', 'name': 'EmailChecker', 'description': 'Email checking plugin', '0': {'type': 'application/email-checker', 'description': '', 'suffixes': ''}}];
+                                if (injectedPlugins) {
+                                    injectedPlugins.forEach(function(plugin, v) {
+                                        var tempPlugin = {
+                                            name: plugin.name,
+                                            description: plugin.description,
+                                            filename: plugin.filename,
+                                            version: undefined,
+                                            length: 1,
+                                            item: function(index) { return this[index] || null; },
+                                            namedItem: function(name) { return this[name] || null; }
+                                        };
+                                        var tempMime = {
+                                            description: plugin[0].description,
+                                            suffixes: plugin[0].suffixes,
+                                            type: plugin[0].type,
+                                            enabledPlugin: null
+                                        };
+                                        Object.setPrototypeOf(tempMime, MimeType.prototype);
+                                        tempPlugin[0] = tempPlugin[tempMime.type] = tempMime;
+                                        Object.setPrototypeOf(tempPlugin, Plugin.prototype);
+                                        tempPlugins.push(tempPlugin);
+                                    });
+                                }
+                                var resultPlugins = {
+                                    length: tempPlugins.length,
+                                    item: function(index) { return this[index] || null; },
+                                    namedItem: function(name) { return this[name] || null; },
+                                    refresh: function() {}
+                                };
+                                tempPlugins = shuffle(tempPlugins);
+                                tempPlugins.forEach(function(plugin, i) {
+                                    resultPlugins[i] = resultPlugins[plugin.name] = plugin;
+                                });
+                                Object.setPrototypeOf(resultPlugins, PluginArray.prototype);
+                                Object.defineProperty(window.navigator, 'plugins', {
+                                    get: function() {
+                                        return resultPlugins;
+                                    },
+                                    enumerable: true,
+                                    configurable: true
+                                });
+                            </script>
+    <title>Example Domain</title>
+
+    <meta charset="utf-8" />
+    <meta http-equiv="Content-type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <style type="text/css">
+    body {
+        background-color: #f0f0f2;
+        margin: 0;
+        padding: 0;
+        font-family: -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI", "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+        
+    }
+    div {
+        width: 600px;
+        margin: 5em auto;
+        padding: 2em;
+        background-color: #fdfdff;
+        border-radius: 0.5em;
+        box-shadow: 2px 3px 7px 2px rgba(0,0,0,0.02);
+    }
+    a:link, a:visited {
+        color: #38488f;
+        text-decoration: none;
+    }
+    @media (max-width: 700px) {
+        div {
+            margin: 0 auto;
+            width: auto;
+        }
+    }
+    </style>    
+</head>
+
+<body>
+<div>
+    <h1>Example Domain</h1>
+    <p>This domain is for use in illustrative examples in documents. You may use this
+    domain in literature without prior coordination or asking for permission.</p>
+    <p><a href="https://www.iana.org/domains/example">More information...</a></p>
+</div>
+</body>
+</html>
